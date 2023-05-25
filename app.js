@@ -6,27 +6,24 @@
     Description: The underlying structure to start WEB 420 classwork
 */
 
-//NPM Modules required 
+//This is a list of the NPM Modules required.
 const express = require('express');
 const http = require('http');
 const mongoose = require('mongoose');
 const swaggerUI = require('swagger-ui-express');
 const swaggerJS = require('swagger-jsdoc');
-
 const app = express();
 
-
-//Wiring the Local Server to see what we've created
+//Here we are wiring the Local Server.
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log('Application started and listening on PORT ' + PORT);
 });
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 
-//a little lost with what all this does, I'll be honest
+//a little lost with what all this does, I'll be honest.
 const options = {
     definition: {
         openapi: '3.0.0',
