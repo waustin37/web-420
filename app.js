@@ -1,3 +1,12 @@
+/*
+    ==================
+    Title: app.js, 
+    Author: William Austin
+    Date: 05/24/2023
+    Description: The underlying structure to start WEB 420 classwork
+*/
+
+//NPM Modules required 
 const express = require('express');
 const http = require('http');
 const mongoose = require('mongoose');
@@ -6,6 +15,8 @@ const swaggerJS = require('swagger-jsdoc');
 
 const app = express();
 
+
+//Wiring the Local Server to see what we've created
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log('Application started and listening on PORT ' + PORT);
@@ -14,6 +25,8 @@ app.listen(PORT, () => {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+
+//a little lost with what all this does, I'll be honest
 const options = {
     definition: {
         openapi: '3.0.0',
@@ -24,7 +37,5 @@ const options = {
     },
     apis: ['./routes/*.js'], 
 }
-
 const openapiSpecifications = swaggerJS(options);
-
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(openapiSpecifications));
