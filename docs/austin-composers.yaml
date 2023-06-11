@@ -6,18 +6,18 @@ paths:
   /composers:
     description: The list of composers
     get: 
-      summary: List the full list of composers
+      summary: List the full list of composers from MongoDB
       tags: 
         - Composers
       responses: 
         "200":
-          description: Composer Document
+          description: Composer Documents
         "500":
           description: Server Exception
         "501":
           description: MongoDB Exception
     post:
-      summary: Add a new composer to the list of composers
+      summary: Add a new composer object to the list of composers
       tags: 
         - Composers
       requestBody:
