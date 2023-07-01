@@ -14,6 +14,7 @@ const swaggerJS = require('swagger-jsdoc');
 const mongoose = require('mongoose');
 const composerAPI = require('./routes/austin-composer-routes');
 const personAPI = require('./routes/austin-person-routes');
+const passwordAPI = require('./routes/austin-session-routes');
 
 let app = express();
 
@@ -50,3 +51,4 @@ const openapiSpecifications = swaggerJS(options);
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(openapiSpecifications));
 app.use('/api', composerAPI);
 app.use('/api', personAPI);
+app.use('/api', passwordAPI);
