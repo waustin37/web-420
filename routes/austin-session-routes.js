@@ -8,9 +8,10 @@
 */
 
 const express = require('express');
-const User = require('../models/austin-user.js');
-const bcrypt = require('bcryptjs');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
+
+const User = require('../models/austin-user.js');
 
 const saltRounds = 10;
 
@@ -50,58 +51,44 @@ const saltRounds = 10;
  *         description: MongoDB Exception.
  */
 
-router.post("/signup", async (req, res) => {
+router.post('/signup', async (req, res) => {
     try {
-        //Firstly, we want to ask the user for a desired Username and password
-        User.findOne({userName: req.body.userName}, function (err, user){
-            if (err) {
-                res.status(501).send({
-                    message: "MongoDB Exception",
-                });
-            } else {
 
-                //If username is available we proceed with the rest of the 'user' creation 
-                if(!user) {
+        //Get everything we need from the user
+      const { userName, password, emailAddress } = req.body;
 
-                    // This will 'hash' our password with the bcrpyt module
-                    const hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
-                    const newRegisteredUser = {
-                        userName: req.body.userName,
-                        password: hashedPassword,
-                        emailAddress: req.body.emailAddress,
-                      };
-
-                      //This acutally creates the user document for our collection 
-                    User.create(newRegisteredUser, function (err, registeredUser) {
-                        if (err) {
-                          console.log(err);
-                          res.status(501).send({
-                            message: `MongoDB Exception: ${err}`,
-                          });
-                        } else {
-                          console.log(registeredUser);
-                          res.json(registeredUser);
-                        }
-                    }); 
-
-                    //If user name is already in our collection and error message is received.
-                } else {
-                    res.status(401).send({
-                        message: "Username is already in use.",
-                    });
-                }
-            }
+       //Check to see if that user name is free
+      const existingUser = await User.findOne({ userName });
+  
+      //If it's free, we encrypt the password and create the New User Document
+      if (!existingUser) {
+        const hashedPassword = bcrypt.hashSync(password, saltRounds);
+        const newRegisteredUser = {
+          userName,
+          password: hashedPassword,
+          emailAddress,
+        };
+         User.create(newRegisteredUser, function (err, user) {
+          if (err) {
+            console.log(err);
+            res.status(501).send({
+              message: `MongoDB Exception: ${err}`,
+            });
+          } else {
+            console.log(user);
+            res.send({ message: 'Registered user.' });
+          }
         });
 
-        //If we catch any errors along the way, we deliver this message
-    } catch (e) {
-      console.log(e);
-      res.status(500).send({
-        message: `Server Exception: ${e.message}`,
-      });
+        //If Username isn't free we display this error
+      } else {
+        res.status(401).send({ message: 'Username is already in use.' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: 'Server Exception.' });
     }
   });
-
 
 /**
  * login
@@ -136,44 +123,36 @@ router.post("/signup", async (req, res) => {
  *         description: MongoDB Exception
  */
 
-router.post("/login", async(req, res) => {
+router.post('/login', async (req, res) => {
     try {
-        //Search our Users collection to see if the user name entered matches one in the  collection
-        User.findOne({userName: req.body.userName}, function(err, user){
-            if (err) {
-                res.status(501).send({
-                    message: "MongoDB Exception",
-                });
-            } else {
-                console.log(user.password);
-                console.log(req.body.password);
-                if (user) {
 
-                    //Matches the password for the User document with the entered password
-                    let passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+        //Get the info we need from the user
+      const { userName, password } = req.body;
 
-                    if (passwordIsValid) {
-                        res.status(200).send({
-                            message: "User has logged in",
-                        });
-                    } else {
-                        res.status(401).send({
-                            message: "Invalid username and/or password",
-                        });
-                    }
-                //If No username is found that matches the entered username
-                } else {
-                    res.status(401).send({
-                        message: "Invalid username and/or password",
-                    });
-                }
-            }
-        });
-    } catch (e) {
-        res.status(500).send({
-            message: "Server Exception",
-        });
+      //Check to see if that Username matches one in our collection 
+      const user = await User.findOne({ userName });
+  
+      //If the username exists, we see if the password is valid
+      if (user) {
+        const passwordIsValid = bcrypt.compareSync(password, user.password);
+        if (passwordIsValid) {
+          console.log('User logged in');
+          res.status(200).send({ message: 'User logged in' });
+        } else {
+          console.log('Invalid username and/or password');
+          res.status(401).send({ message: 'Invalid username and/or password' });
+        }
+      } else {
+        res.status(401).send({ message: 'Invalid username and/or password' });
+      }
+    } catch (err) {
+      console.log(err);
+      if (err.name === 'MongoError') {
+        res.status(501).send({ message: `MongoDB Exception: ${err}` });
+      } else {
+        res.status(500).send({ message: `Server Exception: ${err.message}` });
+      }
     }
-});
+  });
 
 module.exports = router;
