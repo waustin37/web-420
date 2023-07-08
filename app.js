@@ -15,6 +15,7 @@ const mongoose = require('mongoose');
 const composerAPI = require('./routes/austin-composer-routes');
 const personAPI = require('./routes/austin-person-routes');
 const passwordAPI = require('./routes/austin-session-routes');
+const nodeShopperAPI = require('./routes/austin-node-shopper-routes')
 
 let app = express();
 
@@ -52,3 +53,4 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(openapiSpecifications));
 app.use('/api', composerAPI);
 app.use('/api', personAPI);
 app.use('/api', passwordAPI);
+app.use('/api', nodeShopperAPI);
