@@ -200,8 +200,8 @@ const Customer = require('../models/austin-customer.js');
                         message: `MongoDB Exception: ${err}`,
                     });
                 } else {
-                    console.log(customer.invoices);
-                    res.json(customer.invoices);
+                    console.log(customer);
+                    res.json(customer);
                 }
             });
         } catch (e) {
