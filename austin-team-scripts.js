@@ -1,7 +1,7 @@
 /**
 	Title: austin-team-scripts.js
     Author: William John Austin & TiaNiecia Mosley
-    Date: 12 July 2023
+    Date: July 22 2023
     Description: MongoDB Shell Scripts for the Customer and Books collections for What-A-Book Project.
  */
 
