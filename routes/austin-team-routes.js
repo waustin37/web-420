@@ -148,7 +148,7 @@ router.get("/teams", async (req, res) => {
  *       '200':
  *         description: Array of player documents
  *       '401':
- *         description: Invalid TeamId
+ *         description: Invalid teamId
  *       '500':
  *         description: Server Exception
  *       '501':
@@ -157,15 +157,15 @@ router.get("/teams", async (req, res) => {
 
   router.get("/teams/:teamId/players", async (req, res) => {
     try {
-        Team.findOne({teamId: req.params.teamId}, function(err, team){
+        Team.findOne({teamId: req.params.teamId}, function(err, players){
             if(err) {
                 console.log(err);
                 res.status(501).send({
                     message: `MongoDB Exception: ${err}`,
                 });
             } else {
-                console.log(team);
-                res.json(team);
+                console.log(players);
+                res.json(players);
             }
         });
     } catch (e) {
