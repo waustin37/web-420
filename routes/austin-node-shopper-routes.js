@@ -212,5 +212,5 @@ const Customer = require('../models/austin-customer.js');
         }
     });
 
-    //Exports out router 
+    //Exports our router 
     module.exports = router;

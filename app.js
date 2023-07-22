@@ -15,7 +15,8 @@ const mongoose = require('mongoose');
 const composerAPI = require('./routes/austin-composer-routes');
 const personAPI = require('./routes/austin-person-routes');
 const passwordAPI = require('./routes/austin-session-routes');
-const nodeShopperAPI = require('./routes/austin-node-shopper-routes')
+const nodeShopperAPI = require('./routes/austin-node-shopper-routes');
+const teamAPI = require('./routes/austin-team-routes')
 
 let app = express();
 
@@ -54,3 +55,4 @@ app.use('/api', composerAPI);
 app.use('/api', personAPI);
 app.use('/api', passwordAPI);
 app.use('/api', nodeShopperAPI);
+app.use('/api', teamAPI)
